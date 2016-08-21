@@ -1,0 +1,8 @@
+{
+    "require": {
+        "slim/slim": "^3.5",
+        "emanueleminotto/simple-html-dom": "^1.5",
+        "devster/ubench": "^1.2",
+        "raveren/kint": "^1.0"
+    }
+}
