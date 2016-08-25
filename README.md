@@ -11,6 +11,18 @@ This README would normally document whatever steps are necessary to get your app
 ### How do I get set up? ###
 
 * Summary of set up
+
+- Install PHP dependencies composer:
+        $ composer install
+
+- install nodejs and npm
+- install bower: 
+        $ npm install -g bower
+
+- Bower Installing packages and dependencies: 
+        # install dependencies listed in bower.json
+        $ bower install
+
 * Configuration
 * Dependencies
 * Database configuration

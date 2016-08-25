@@ -1,3 +1,4 @@
 /nbproject/*
 /vendor/*
+/assets/bower/
 composer.lock
