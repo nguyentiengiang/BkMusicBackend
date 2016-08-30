@@ -1,10 +1,7 @@
 Options +FollowSymLinks
 RewriteEngine On
 RewriteBase /
-#RewriteRule ^$ /s9/manage [L]
 
-##############
-#RedirectMatch 307 /s9/proxy/(.*) /s9/api/proxy/$1
-#RewriteRule ^proxy/(.*)/?$ /s9/api/proxy/$1 [R=307,L]
-#RewriteRule ^proxy/getLyric/(.*)/?$ /s9/api/proxy/getLyric/$1 [R=307,L]
-##############
+RewriteRule ^$ /src/App/index.php [L]
+RewriteCond %{REQUEST_URI} !^/src/
+RewriteRule ^(.*) /src/$1 [L]

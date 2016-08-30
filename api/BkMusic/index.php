@@ -12,7 +12,7 @@ define("DEBUG_MODE", TRUE);
  * DO NOT Touch this file if must needed
  */
 define('ROOT', __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR);
-require(ROOT . 'config' . DIRECTORY_SEPARATOR . 'bootstrap.php');
+require(ROOT . 'config' . DIRECTORY_SEPARATOR . 'bootstrapSlimAPI.php');
 
 /**
  * 
@@ -28,14 +28,13 @@ require_once($classApplication . '.php');
  */
 
 function startApp($classApplication) {
-    $appRun = new $classApplication();
-    $appRun->app();
+    new $classApplication();
 }
 
 /*
  * Run Slim app in mode defined
  */
-if (MODE_APP === "RELEASE") {
+if (!DEBUG_MODE) {
     startApp($classApplication);
 } else {
     $bench = new Ubench;
@@ -45,6 +44,6 @@ if (MODE_APP === "RELEASE") {
     $str = PHP_EOL . 'Time: ' . $bench->getTime(true) . ' microsecond -> ' . $bench->getTime(false, '%d%s');
     $str .= PHP_EOL . 'MemoryPeak: ' . $bench->getMemoryPeak(true) . ' bytes -> ' . $bench->getMemoryPeak(false, '%.3f%s');
     $str .= PHP_EOL . 'MemoryUsage: ' . $bench->getMemoryUsage(true);
-    s10Core\MyFile\Log::write($str, $classApplication, "TestDEBUG");
+    s10Core\MyFile\Log::write($str, $classApplication, "TestBenchmark" . $classApplication);
     unset($str);
 }
