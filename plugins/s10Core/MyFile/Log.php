@@ -19,12 +19,12 @@ class Log {
     private static $fileLog = null;
     private static $content = null;
 
-    static function write($message = null, $app = 'API', $db = 'api') {
+    static function write($message = null, $app = 'API', $fnc = 'api') {
         if (!file_exists($_SERVER['DOCUMENT_ROOT'] . '/.s10AppsLog/' . $app)) {
             mkdir($_SERVER['DOCUMENT_ROOT'] . '/.s10AppsLog/' . $app, 0755, true);
         }
         self::$path = $_SERVER['DOCUMENT_ROOT'] . '/.s10AppsLog/' . $app . '/';
-        self::$fileLog = '[' . date('Y.m.d') . '] - ' . $app . '@' . $db . '.txt';
+        self::$fileLog = '[' . date('Y.m.d') . '] - ' . $app . '@' . $fnc . '.txt';
         self::$content = '[' . date('Y-m-d H:i:s') . '] - ' . $message . PHP_EOL . '--------------' . PHP_EOL;
         File::write(self::$path . '/' . self::$fileLog, self::$content, true);
     }

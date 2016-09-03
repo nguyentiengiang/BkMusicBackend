@@ -26,17 +26,10 @@ class BkMusic extends s10Core\defaultApp {
      * 
      */
     public function enableMethods() {
-        $this->app->get('/{name}', self::$appName . '::index');
-        $this->app->get('/json/GetCategories', self::$appName . '::GetCategories');
-    }
-        
-    public function index($request, $response) {
-        $name = $request->getAttribute('name');
-        $response->getBody()->write("Hello, $name");
-        return $response;
+        $this->app->get('/GetCategories', self::$appName . '::getCategories');
     }
     
-    public function GetCategories($request, $response) {
+    public function getCategories($request, $response) {
         $response->getBody()->write("Hello");
         return $response;
     }

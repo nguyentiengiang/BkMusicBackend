@@ -8,8 +8,8 @@
  * @copyright (c) 2016, Tien Giang
  */
 
-include 'defaultApp.php';
-include 'MyFile/load.php';
+include_once 'defaultApp.php';
+include_once 'MyFile/load.php';
 
 if(!DEBUG_MODE){
     if (class_exists('Kint')) {

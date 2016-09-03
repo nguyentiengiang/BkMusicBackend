@@ -4,7 +4,7 @@
  * Demo Application
  */
 
-class Demo extends s10Core\defaultApp {
+class DemoApp extends s10Core\defaultApp {
     
     /**
      * Re-define public properties in __construct() method (except $logMessage for WRITE TO LOG)
