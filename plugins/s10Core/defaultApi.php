@@ -13,7 +13,7 @@ namespace s10Core;
  * @copyright (c) 2016, Tien Giang
  */
  
-class defaultApp {
+class defaultApi {
     
     /**
      * public properties
@@ -62,6 +62,7 @@ class defaultApp {
         $this->app->get('/', function ($request, $response) {
             $routers = array_slice($this->get('router')->getRoutes(), 0, -1);
             ddd($routers);
+            return $response;
         });
     }
 

@@ -12,13 +12,13 @@ define("DEBUG_MODE", TRUE);
  * DO NOT Touch this file if must needed
  */
 define('ROOT', __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR);
-require(ROOT . 'config' . DIRECTORY_SEPARATOR . 'bootstrapSlimAPI.php');
+require(ROOT . 'config' . DIRECTORY_SEPARATOR . 'bootstrapSlimApi.php');
 
 /**
  * 
  * Define name of api application choose what ever you want
  */
-$classApplication = 'BkMusic';
+$classApplication = 'bkMusic';
 require_once($classApplication . '.php');
 
 /**

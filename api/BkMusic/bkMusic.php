@@ -4,7 +4,7 @@
  * BkMusic Application
  */
 
-class BkMusic extends s10Core\defaultApp {
+class bkMusic extends s10Core\defaultApi {
     
     /**
      * Re-define public properties in __construct() method (except $logMessage for WRITE TO LOG)
@@ -26,7 +26,7 @@ class BkMusic extends s10Core\defaultApp {
      * 
      */
     public function enableMethods() {
-        $this->app->get('/GetCategories', self::$appName . '::getCategories');
+        $this->app->get('/GetCategories', self::$appName . '::getCategories')->setName('Category');
     }
     
     public function getCategories($request, $response) {

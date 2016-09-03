@@ -8,7 +8,7 @@
  * @copyright (c) 2016, Tien Giang
  */
 
-include_once 'defaultApp.php';
+include_once 'defaultApi.php';
 include_once 'MyFile/load.php';
 
 if(!DEBUG_MODE){

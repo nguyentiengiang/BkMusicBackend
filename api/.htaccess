@@ -1,1 +1,5 @@
-Options -Indexes
+# Do not remove this line, otherwise mod_rewrite rules will stop working
+Options +FollowSymLinks
+
+RewriteEngine On
+RewriteBase /
