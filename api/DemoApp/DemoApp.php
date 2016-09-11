@@ -4,7 +4,7 @@
  * Demo Application
  */
 
-class demoApp extends s10Core\defaultApi {
+class DemoApp extends s10Core\DefaultApi {
     
     /**
      * Re-define public properties in __construct() method (except $logMessage for WRITE TO LOG)

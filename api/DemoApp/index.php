@@ -18,7 +18,7 @@ require(ROOT . 'config' . DIRECTORY_SEPARATOR . 'bootstrapSlimApi.php');
  * 
  * Define name of api application choose what ever you want
  */
-$classApplication = 'demoApp';
+$classApplication = 'DemoApp';
 require_once($classApplication . '.php');
 
 /**

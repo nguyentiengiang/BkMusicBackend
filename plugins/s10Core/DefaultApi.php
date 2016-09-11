@@ -13,7 +13,7 @@ namespace s10Core;
  * @copyright (c) 2016, Tien Giang
  */
  
-class defaultApi {
+class DefaultApi {
     
     /**
      * public properties
@@ -24,11 +24,10 @@ class defaultApi {
     public static $isDebug = TRUE;      // Set Debug Turn ON
     public static $appName = 'API';     // Set App Name
     // Set Database Configuration
-    public static $arrDatabaseConfig = [
-        'host' => 'localhost',
-        'dbName' => 's10',
-        'username' => 'root',
-        'password' => '123456'
+    public static $arrDatabaseConfigIdiOrm = [
+        'connection_string' => 'mysql:host=localhost;dbname=my_database',
+        'username' => 'database_user',
+        'password' => 'top_secret'
         ];
     // Set Slim Application Configuration
     public static $arrSlimContainer = [];
