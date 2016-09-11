@@ -37,7 +37,7 @@ function startApp($classApplication) {
 if (!DEBUG_MODE) {
     startApp($classApplication);
 } else {
-    $bench = new Ubench;
+    $bench = new Ubench();
     $bench->start();
     startApp($classApplication);
     $bench->end();

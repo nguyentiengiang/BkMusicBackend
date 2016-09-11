@@ -13,8 +13,6 @@ include_once 'ParserData.php';
 include_once 'MyFile/load.php';
 
 if(!DEBUG_MODE){
-    if (class_exists('Kint')) {
-        Kint::enabled(FALSE);
-    }
+    Kint::enabled(FALSE);
 }
 

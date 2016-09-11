@@ -60,6 +60,7 @@ class DefaultApi {
         }
         $this->app->get('/', function ($request, $response) {
             $routers = array_slice($this->get('router')->getRoutes(), 0, -1);
+            // Will be fix soon...
             ddd($routers);
             return $response;
         });
