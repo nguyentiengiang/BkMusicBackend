@@ -15,6 +15,8 @@ if (!defined('JSON_OPTIONS')){
 }
 /** ---- Define for list, array, hash, normal string, number ... ---- **/
 class ApiConstant {
+    public static $JSON_ERROR_STATIC = ['error' => true];
     public static $JSON_ERROR_NOT_FOUND = ['error' => true, 'message' => 'Item not found.'];
+    public static $JSON_ERROR_WRONG_FORMAT = ['error' => true, 'message' => 'Input format wrong.'];
     
 }

@@ -14,6 +14,14 @@ define("DEBUG_MODE", TRUE);
 define('ROOT', __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR);
 require(ROOT . 'config' . DIRECTORY_SEPARATOR . 'bootstrapSlimApi.php');
 
+
+/**
+ * SET SHOW ERROR
+ */
+//ini_set('display_startup_errors',1);
+//ini_set('display_errors',1);
+//error_reporting(-1);
+
 /**
  * 
  * Define name of api application choose what ever you want

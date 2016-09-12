@@ -7,6 +7,7 @@
         "raveren/kint": "^1.0",
         "devster/ubench": "^1.2",
         "emanueleminotto/simple-html-dom": "^1.5",
-        "j4mie/paris": "^1.5"
+        "j4mie/paris": "^1.5",
+        "vlucas/valitron": "^1.2"
     }
 }

@@ -2,6 +2,7 @@
 
 use s10Core\DefaultApi;
 use s10Core\ParserData;
+use Valitron\Validator as V;
 
 /**
  * BkMusic Application
@@ -41,12 +42,11 @@ class BkMusic extends DefaultApi {
         $this->app->get('/GetNhacHot[/{playlistId}[/{page}]]', self::$appName . '::parserNhacHot')->setName('NhacHot');
         $this->app->get('/GetAlbum[/{albumListId}[/{page}]]', self::$appName . '::parserAlbum')->setName('Album');
         $this->app->get('/GetChart[/{chartId}]', self::$appName . '::parserChart')->setName('MusicChart');
-        $this->app->get('/GetSongPlaylist/{url}', self::$appName . '::parserSongPlaylist')->setName('SongPlaylist');
-//        $this->app->get('/GetSong/{url}', self::$appName . '::parserSong')->setName('Song');
-//        
+        $this->app->get('/GetSongs', self::$appName . '::parserSongs')->setName('Songs');
+        $this->app->get('/GetSinger', self::$appName . '::parserSinger')->setName('Singer');
     }
     
-    public function getCategories($request, $response, $args) {
+    public static function getCategories($request, $response, $args) {
         ORM::configure(self::$arrDatabaseConfigIdiOrm);
         $categories = ORM::for_table('Categories')
                 ->select(['id', 'name', 'img', 'parent_id', 'is_delete'])
@@ -54,7 +54,7 @@ class BkMusic extends DefaultApi {
         return $response->withJson($categories, 200, JSON_OPTIONS);
     }
     
-    public function parserNhacHot($request, $response, $args) {
+    public static function parserNhacHot($request, $response, $args) {
         $playlistId = isset($args['playlistId']) ? $args['playlistId'] : '1';
         $page = (isset($args['page']) && $args['page'] != 1) ? intval($args['page']) : '';
         ORM::configure(self::$arrDatabaseConfigIdiOrm);
@@ -83,7 +83,7 @@ class BkMusic extends DefaultApi {
         return $appResponse;
     }
 
-    public function parserAlbum($request, $response, $args) {
+    public static function parserAlbum($request, $response, $args) {
         $albumId = isset($args['albumListId']) ? $args['albumListId'] : '29';
         $page = (isset($args['page']) && $args['page'] != 1) ? intval($args['page']) : '';
         ORM::configure(self::$arrDatabaseConfigIdiOrm);
@@ -113,7 +113,7 @@ class BkMusic extends DefaultApi {
         return $appResponse;
     }
     
-    public function parserChart($request, $response, $args) {
+    public static function parserChart($request, $response, $args) {
         $albumId = isset($args['chartId']) ? $args['chartId'] : '45';
         
         ORM::configure(self::$arrDatabaseConfigIdiOrm);
@@ -145,43 +145,67 @@ class BkMusic extends DefaultApi {
         return $appResponse;
     }
     
-    public function parserSongPlaylist($request, $response, $args) {
-        // using base64_decode for url encoded
-        $url = isset($args['url']) ? base64_decode($args['url']) : '';
-        if(!isset($args['url'])){
-            return $response->withJson(ApiConstant::$JSON_ERROR_NOT_FOUND, 404);
+    public static function parserSongs($request, $response, $args) {
+        $params = $request->getQueryParams('urlSong', null);
+        // validate URL
+        $v = new V($params);
+        $v->rule('required', ['urlSong']);
+        $v->rule('url', ['urlSong']);
+        
+        if(!$v->validate()){
+            return $response->withJson(ApiConstant::$JSON_ERROR_STATIC + ['message' => $v->errors()], 200);
         }
-        // Get javascript content
-        $html = ParserData::getHmltBySimpleDomParse($url);
-        $scriptContent = array_shift($html->find('div[class=playing_absolute] script[!src]'))->innertext;
-        $arrScriptContent = explode('player.peConfig.xmlURL = "', $scriptContent);
-        $arrSplited = explode('";', $arrScriptContent[1]);
-        // cut string get flash xml file
-        $urlPlaylist = $arrSplited[0];
-        //Get xml url
-        $htmlTracks = ParserData::getHmltBySimpleDomParse($urlPlaylist);
-        $tracks = $htmlTracks->find('tracklist track');
-        $arrListTrack = [];
-        foreach ($tracks as $track) {
-            array_push($arrListTrack, [
-                'songName' => self::extractStringInfoPlaylist(array_shift($track->find('title'))->plaintext),
-                'singer' => self::extractStringInfoPlaylist(array_shift($track->find('creator'))->plaintext),
-                'singerUrl' => self::extractStringInfoPlaylist(array_shift($track->find('newtab'))->plaintext),
-                'bgimage' => self::extractStringInfoPlaylist(array_shift($track->find('bgimage'))->plaintext),
-                'avatar' => self::extractStringInfoPlaylist(array_shift($track->find('avatar'))->plaintext),
-                'keyMp3' => self::extractStringInfoPlaylist(array_shift($track->find('key'))->plaintext),
-                'mp3Url' => self::extractStringInfoPlaylist(array_shift($track->find('location'))->plaintext),
-                'songUrl' => self::extractStringInfoPlaylist(array_shift($track->find('info'))->plaintext),
-            ]);
-        }
+        $arrListTrack = self::extractTracklist($params['urlSong']);
         $appResponse = $response->withJson($arrListTrack);
         return $appResponse;
     }
     
-    public function parserSong($request, $response, $args) {
+    public static function parserSinger($request, $response, $args) {
+        $params = $request->getQueryParams('urlSinger', null);
+        // validate URL
+        $v = new V($params);
+        $v->rule('required', ['urlSinger']);
+        $v->rule('url', ['urlSinger']);
         
+        if(!$v->validate()){
+            return $response->withJson(ApiConstant::$JSON_ERROR_STATIC + ['message' => $v->errors()], 200);
+        }
+        $html = ParserData::getHmltBySimpleDomParse($params['urlSinger']);
+        
+        $arrAlbums = [];
+        $liAlbums = $html->find('div[class=list_album] div[class=fram_select] ul li');
+        foreach ($liAlbums as $itemAlbum) {
+            $albumArt = trim(array_shift($itemAlbum->find('div[class=box-left-album] span[class=avatar] img'))->getAttribute('data-src'));
+            $albumName = trim(array_shift($itemAlbum->find('div[class=info_album] a[class=name_song]'))->plaintext);
+            $albumUrl = trim(array_shift($itemAlbum->find('div[class=info_album] a[class=name_song]'))->href);
+            array_push($arrAlbums, [
+                'albumArt' => $albumArt,
+                'albumName' => $albumName,
+                'albumUrl' => $albumUrl,
+            ]);
+        }
+        
+        $arrSongs = [];
+        $liSongs = $html->find('ul[class=list_item_music] li');
+        foreach ($liSongs as $itemSong) {
+            $songName = trim(array_shift($itemSong->find('div[class=item_content] a[class=name_song]'))->plaintext);
+            $songUrl = trim(array_shift($itemSong->find('div[class=item_content] a[class=name_song]'))->href);
+            array_push($arrSongs, [
+                'songName' => $songName,
+                'songUrl' => $songUrl
+            ]);
+        }
+        
+        $arrInfoSinger = [
+            'albums' => $arrAlbums,
+            'songs' => $arrSongs,
+        ];
+        
+        $appResponse = $response->withJson($arrInfoSinger);
+        return $appResponse;
     }
-    //Search http://www.nhaccuatui.com/ajax/search?q=noo%20phu
+
+        //Search http://www.nhaccuatui.com/ajax/search?q=noo%20phu
     
     private static function extractStringInfoPlaylist($str) {
         $strExtract = trim($str);
@@ -190,6 +214,44 @@ class BkMusic extends DefaultApi {
             ']]>' => ''
         ];
         return str_replace(array_keys($arrReplace), array_values($arrReplace), $strExtract);
+    }
+    
+    private static function extractTracklist($url) {
+        // Get javascript content
+        $html = ParserData::getHmltBySimpleDomParse($url);
+        $srciptString = $html->find('div[class=playing_absolute] script[!src]');
+        $scriptContent = array_shift($srciptString)->innertext;
+        $arrScriptContent = explode('player.peConfig.xmlURL = "', $scriptContent);
+        $arrSplited = explode('";', $arrScriptContent[1]);
+        // cut string get flash xml file
+        $urlPlaylist = $arrSplited[0];
+        unset($arrScriptContent);
+        unset($arrSplited);
+        //Get xml url
+        $htmlTracks = ParserData::getHmltBySimpleDomParse($urlPlaylist);
+        $tracks = $htmlTracks->find('tracklist track');
+        $arrListTrack = [];
+        foreach ($tracks as $track) {
+            $title = $track->find('title');
+            $creator = $track->find('creator');
+            $newtab = $track->find('newtab');
+            $bgimage = $track->find('bgimage');
+            $avatar = $track->find('avatar');
+            $key = $track->find('key');
+            $location = $track->find('location');
+            $info = $track->find('info');
+            array_push($arrListTrack, [
+                'songName' => self::extractStringInfoPlaylist(array_shift($title)->plaintext),
+                'singer' => self::extractStringInfoPlaylist(array_shift($creator)->plaintext),
+                'singerUrl' => self::extractStringInfoPlaylist(array_shift($newtab)->plaintext),
+                'bgimage' => self::extractStringInfoPlaylist(array_shift($bgimage)->plaintext),
+                'avatar' => self::extractStringInfoPlaylist(array_shift($avatar)->plaintext),
+                'keyMp3' => self::extractStringInfoPlaylist(array_shift($key)->plaintext),
+                'mp3Url' => self::extractStringInfoPlaylist(array_shift($location)->plaintext),
+                'songUrl' => self::extractStringInfoPlaylist(array_shift($info)->plaintext),
+            ]);
+        }
+        return $arrListTrack;
     }
     
 }

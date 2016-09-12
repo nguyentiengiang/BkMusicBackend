@@ -21,7 +21,7 @@ class Log {
 
     static function write($message = null, $app = 'API', $fnc = 'api') {
         if (!file_exists($_SERVER['DOCUMENT_ROOT'] . '/.s10AppsLog/' . $app)) {
-            mkdir($_SERVER['DOCUMENT_ROOT'] . '/.s10AppsLog/' . $app, 0755, true);
+            mkdir($_SERVER['DOCUMENT_ROOT'] . '/.s10AppsLog/' . $app, 0777, true);
         }
         self::$path = $_SERVER['DOCUMENT_ROOT'] . '/.s10AppsLog/' . $app . '/';
         self::$fileLog = '[' . date('Y.m.d') . '] - ' . $app . '@' . $fnc . '.txt';
