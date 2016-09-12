@@ -2,6 +2,12 @@ Options +FollowSymLinks
 RewriteEngine On
 RewriteBase /
 
+# Use this rules with top directoty domain
 RewriteRule ^$ /src/App/index.php [L]
 RewriteCond %{REQUEST_URI} !^/src/
 RewriteRule ^(.*) /src/$1 [L]
+
+# Use this rules with nested directory (example /s10)
+#RewriteRule ^$ /s10/src/App/index.php [L]
+#RewriteCond %{REQUEST_URI} !^/s10/src/
+#RewriteRule ^(.*) /s10/src/$1 [L]
