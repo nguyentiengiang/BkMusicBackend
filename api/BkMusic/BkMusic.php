@@ -49,7 +49,8 @@ class BkMusic extends DefaultApi {
     public static function getCategories($request, $response, $args) {
         ORM::configure(self::$arrDatabaseConfigIdiOrm);
         $categories = ORM::for_table('Categories')
-                ->select(['id', 'name', 'img', 'parent_id', 'is_delete'])
+                ->select(['id', 'name', 'img', 'parent_id'])
+                ->where_not_equal(['parent_id' => 0])
                 ->find_array();
         return $response->withJson($categories, 200, JSON_OPTIONS);
     }
@@ -73,12 +74,15 @@ class BkMusic extends DefaultApi {
         foreach ($liElements as $liElement) {
             $contentSong = $liElement->find('div[class=item_content]');
             array_push($arrSongs, [
-                'songName' => trim(array_shift($contentSong)->plaintext),
+                'songName' => trim($liElement->find('div[class=item_content] a[class=name_song]', 0)->plaintext),
                 'songUrl' => trim($liElement->find('div[class=item_content] a[class=name_song]', 0)->href),
                 'singer' => trim($liElement->find('div[class=item_content] a[class=name_singer]', 0)->plaintext),
                 'singerUrl' => trim($liElement->find('div[class=item_content] a[class=name_singer]', 0)->href),
             ]);
         }
+        unset($liElements);
+        $html->clear();
+        unset($html);
         $appResponse = $response->withJson($arrSongs);
         return $appResponse;
     }
@@ -109,6 +113,9 @@ class BkMusic extends DefaultApi {
                 'singerUrl' => trim(array_shift($liElement->find('div[class=info_album] a[class=name_singer]'))->href),
             ]);
         }
+        unset($liElements);
+        $html->clear();
+        unset($html);
         $appResponse = $response->withJson($arrAlbums);
         return $appResponse;
     }
@@ -141,6 +148,9 @@ class BkMusic extends DefaultApi {
             'playAllUrl' => $playlistUrl,
             'songs' => $arrSongs
         ];
+        unset($liElements);
+        $html->clear();
+        unset($html);
         $appResponse = $response->withJson($arrChart);
         return $appResponse;
     }
@@ -225,6 +235,9 @@ class BkMusic extends DefaultApi {
         $arrSplited = explode('";', $arrScriptContent[1]);
         // cut string get flash xml file
         $urlPlaylist = $arrSplited[0];
+        // unset html for Memory leak!
+        $html->clear();
+        unset($html);
         unset($arrScriptContent);
         unset($arrSplited);
         //Get xml url
@@ -251,6 +264,9 @@ class BkMusic extends DefaultApi {
                 'songUrl' => self::extractStringInfoPlaylist(array_shift($info)->plaintext),
             ]);
         }
+        unset($tracks);
+        $htmlTracks->clear();
+        unset($htmlTracks);
         return $arrListTrack;
     }
     

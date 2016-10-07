@@ -38,6 +38,7 @@ class DefaultApi {
      * 
      */
     public function __construct() {
+//        $this->addApiSlimContainer();
         $this->app = new \Slim\App(self::$arrSlimContainer);
         $this->enableMethods();
         $this->generateRouterList();
@@ -75,16 +76,13 @@ class DefaultApi {
         }
     }
         
-    private function customSlimContainer($param) {
-        $c['notFoundHandler'] = function ($c) {
-            return function ($request, $response) use ($c) {
-                return $c['response']
-                    ->withStatus(404)
-                    ->withHeader('Content-Type', 'text/html')
-                    ->write('Page not found');
-            };
+    public function addApiSlimContainer() {
+        // Register service provider with the container
+        $container = new \Slim\Container;
+        $container['cache'] = function () {
+            return new \Slim\HttpCache\CacheProvider();
         };
-        return $arrSlimContainer;
+        self::$arrSlimContainer = $container;
     }
     
 }

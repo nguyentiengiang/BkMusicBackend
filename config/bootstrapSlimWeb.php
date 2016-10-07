@@ -3,10 +3,10 @@
 /**
  * Description of bootstrapSlimWeb
  *
- * @author TienGiang
+ * @author TienGiang <nguyentiengiang@outlook.com>
  */
 define('DS', DIRECTORY_SEPARATOR);
-define('ROOT', __DIR__ . DS . '..' . DS . '..' . DS);
+define('ROOT_DIR', __DIR__ . DS . '..' . DS);
 
-require(ROOT . 'vendor' . DS . 'autoload.php');
-require(ROOT . 'plugins' . DS . 's10Core' . DS .'autoloadWeb.php');
+require_once ROOT_DIR . 'vendor' . DS . 'autoload.php';
+require_once ROOT_DIR . 'plugins' . DS . 's10Core' . DS .'autoloadWeb.php';
