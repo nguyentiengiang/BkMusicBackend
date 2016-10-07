@@ -2,3 +2,4 @@
 /vendor/*
 /assets/bower/
 composer.lock
+.htaccess
