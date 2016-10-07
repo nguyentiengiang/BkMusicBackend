@@ -1,5 +1,7 @@
 <?php
 
+namespace s10App;
+
 use s10Core\DefaultApi;
 use s10Core\ParserData;
 use Valitron\Validator as V;
@@ -12,7 +14,6 @@ class BkMusic extends DefaultApi {
     
     /**
      * Re-define public properties in __construct() method (except $logMessage for WRITE TO LOG)
-     * 
      */
     public function __construct() {
         self::$isWriteLog = TRUE;
@@ -23,12 +24,9 @@ class BkMusic extends DefaultApi {
             'username' => 'root',
             'password' => '',
             'return_result_sets' => true,
-            'driver_options' => [
-                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
-                ],
+            'driver_options' => [PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'],
         ];
         self::$arrSlimContainer = [];
-        
         // Write magic method __construct() of parent(defaultApp) after re-define public properties
         parent::__construct();
     }
@@ -113,9 +111,7 @@ class BkMusic extends DefaultApi {
                 'singerUrl' => trim(array_shift($liElement->find('div[class=info_album] a[class=name_singer]'))->href),
             ]);
         }
-        unset($liElements);
-        $html->clear();
-        unset($html);
+        unset($liElements); $html->clear(); unset($html);
         $appResponse = $response->withJson($arrAlbums);
         return $appResponse;
     }
@@ -236,10 +232,7 @@ class BkMusic extends DefaultApi {
         // cut string get flash xml file
         $urlPlaylist = $arrSplited[0];
         // unset html for Memory leak!
-        $html->clear();
-        unset($html);
-        unset($arrScriptContent);
-        unset($arrSplited);
+        $html->clear(); unset($html); unset($arrScriptContent); unset($arrSplited);
         //Get xml url
         $htmlTracks = ParserData::getHmltBySimpleDomParse($urlPlaylist);
         $tracks = $htmlTracks->find('tracklist track');
@@ -264,10 +257,8 @@ class BkMusic extends DefaultApi {
                 'songUrl' => self::extractStringInfoPlaylist(array_shift($info)->plaintext),
             ]);
         }
-        unset($tracks);
-        $htmlTracks->clear();
-        unset($htmlTracks);
+        unset($tracks); $htmlTracks->clear(); unset($htmlTracks);
         return $arrListTrack;
     }
-    
+
 }
