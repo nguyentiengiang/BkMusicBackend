@@ -1,6 +1,6 @@
 <?php
 
-namespace s10App;
+namespace s10Api;
 
 use s10Core\DefaultApi;
 use s10Core\ParserData;
