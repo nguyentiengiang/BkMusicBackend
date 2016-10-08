@@ -1,6 +1,0 @@
-# Do not remove this line, otherwise mod_rewrite rules will stop working
-Options +FollowSymLinks
-
-RewriteEngine on
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . index.php [L]
