@@ -1,7 +1,5 @@
 <?php
 
-namespace s10Api;
-
 use s10Core\DefaultApi;
 use s10Core\ParserData;
 use Valitron\Validator as V;
@@ -12,6 +10,15 @@ use Valitron\Validator as V;
 
 class BkMusic extends DefaultApi {
     
+    private $sqlLocal = 'sqlite:BkMusic.db';
+    private $mySqlSetting = [
+            'connection_string' => 'mysql:host=localhost;dbname=BkMusic',
+            'username' => 'root',
+            'password' => '',
+            'return_result_sets' => true,
+            'driver_options' => [PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'],
+        ];
+    
     /**
      * Re-define public properties in __construct() method (except $logMessage for WRITE TO LOG)
      */
@@ -19,13 +26,7 @@ class BkMusic extends DefaultApi {
         self::$isWriteLog = TRUE;
         self::$isDebug = DEBUG_MODE;
         self::$appName = get_class($this);
-        self::$arrDatabaseConfigIdiOrm = [
-            'connection_string' => 'mysql:host=localhost;dbname=BkMusic',
-            'username' => 'root',
-            'password' => '',
-            'return_result_sets' => true,
-            'driver_options' => [PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'],
-        ];
+        self::$arrDatabaseConfigIdiOrm = $this->sqlLocal;
         self::$arrSlimContainer = [];
         // Write magic method __construct() of parent(defaultApp) after re-define public properties
         parent::__construct();
