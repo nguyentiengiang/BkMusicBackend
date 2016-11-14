@@ -43,7 +43,7 @@ class BkMusic extends DefaultApi {
         $this->app->get('/GetChart[/{chartId}]', self::$appName . '::parserChart')->setName('MusicChart');
         $this->app->get('/GetSongs', self::$appName . '::parserSongs')->setName('Songs');
         $this->app->get('/GetSinger', self::$appName . '::parserSinger')->setName('Singer');
-        ddd('DIE HARD?');
+        ddd('DIE HARD?1');
     }
     
     public static function getCategories($request, $response, $args) {
