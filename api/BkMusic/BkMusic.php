@@ -30,7 +30,8 @@ class BkMusic extends DefaultApi {
         self::$arrDatabaseConfigIdiOrm = $this->sqlLocal;
         self::$arrSlimContainer = [];
         // Write magic method __construct() of parent(defaultApp) after re-define public properties
-        $this->app = new \Slim\App(self::$arrSlimContainer);
+        $this->container = new \Slim\Container(['settings' => ['displayErrorDetails' => true]]);
+        $this->app = new \Slim\App($this->container);
         $this->app->get('/GetCategories', self::$appName . '::getCategories')->setName('Category');
         $this->app->get('/GetNhacHot[/{playlistId}[/{page}]]', self::$appName . '::parserNhacHot')->setName('NhacHot');
         $this->app->get('/GetAlbum[/{albumListId}[/{page}]]', self::$appName . '::parserAlbum')->setName('Album');
