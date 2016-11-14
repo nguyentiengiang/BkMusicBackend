@@ -37,6 +37,7 @@ class BkMusic extends DefaultApi {
      * 
      */
     public function enableMethods() {
+        ddd('DIE HARD?');
         $this->app->get('/GetCategories', self::$appName . '::getCategories')->setName('Category');
         $this->app->get('/GetNhacHot[/{playlistId}[/{page}]]', self::$appName . '::parserNhacHot')->setName('NhacHot');
         $this->app->get('/GetAlbum[/{albumListId}[/{page}]]', self::$appName . '::parserAlbum')->setName('Album');
