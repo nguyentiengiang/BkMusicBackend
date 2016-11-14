@@ -4,6 +4,7 @@ use s10Core\DefaultApi;
 use s10Core\ParserData;
 use Valitron\Validator as V;
 
+error_reporting(-1);
 /**
  * BkMusic Application
  */
