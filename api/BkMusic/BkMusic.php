@@ -29,7 +29,9 @@ class BkMusic extends DefaultApi {
         self::$arrDatabaseConfigIdiOrm = $this->sqlLocal;
         self::$arrSlimContainer = [];
         // Write magic method __construct() of parent(defaultApp) after re-define public properties
-        parent::__construct();
+        $this->app = new \Slim\App(self::$arrSlimContainer);
+        $this->enableMethods();
+        $this->app->run();
     }
     
     /**
@@ -43,7 +45,6 @@ class BkMusic extends DefaultApi {
         $this->app->get('/GetChart[/{chartId}]', self::$appName . '::parserChart')->setName('MusicChart');
         $this->app->get('/GetSongs', self::$appName . '::parserSongs')->setName('Songs');
         $this->app->get('/GetSinger', self::$appName . '::parserSinger')->setName('Singer');
-        ddd('DIE HARD?1');
     }
     
     public static function getCategories($request, $response, $args) {
