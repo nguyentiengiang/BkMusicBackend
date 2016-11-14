@@ -37,13 +37,13 @@ class BkMusic extends DefaultApi {
      * 
      */
     public function enableMethods() {
-        ddd('DIE HARD?');
         $this->app->get('/GetCategories', self::$appName . '::getCategories')->setName('Category');
         $this->app->get('/GetNhacHot[/{playlistId}[/{page}]]', self::$appName . '::parserNhacHot')->setName('NhacHot');
         $this->app->get('/GetAlbum[/{albumListId}[/{page}]]', self::$appName . '::parserAlbum')->setName('Album');
         $this->app->get('/GetChart[/{chartId}]', self::$appName . '::parserChart')->setName('MusicChart');
         $this->app->get('/GetSongs', self::$appName . '::parserSongs')->setName('Songs');
         $this->app->get('/GetSinger', self::$appName . '::parserSinger')->setName('Singer');
+        ddd('DIE HARD?');
     }
     
     public static function getCategories($request, $response, $args) {
