@@ -30,15 +30,8 @@ class BkMusic extends DefaultApi {
         self::$arrDatabaseConfigIdiOrm = $this->sqlLocal;
         self::$arrSlimContainer = [];
         // Write magic method __construct() of parent(defaultApp) after re-define public properties
-        $this->container = new \Slim\Container(['settings' => ['displayErrorDetails' => true]]);
-        $this->app = new \Slim\App($this->container);
-        $this->app->get('/GetCategories', self::$appName . '::getCategories')->setName('Category');
-        $this->app->get('/GetNhacHot[/{playlistId}[/{page}]]', self::$appName . '::parserNhacHot')->setName('NhacHot');
-        $this->app->get('/GetAlbum[/{albumListId}[/{page}]]', self::$appName . '::parserAlbum')->setName('Album');
-        $this->app->get('/GetChart[/{chartId}]', self::$appName . '::parserChart')->setName('MusicChart');
-        $this->app->get('/GetSongs', self::$appName . '::parserSongs')->setName('Songs');
-        $this->app->get('/GetSinger', self::$appName . '::parserSinger')->setName('Singer');
-        $this->app->run();
+//        $this->container = new \Slim\Container(['settings' => ['displayErrorDetails' => true]]);
+        parent::__construct();
     }
     
     /**
@@ -46,7 +39,12 @@ class BkMusic extends DefaultApi {
      * 
      */
     public function enableMethods() {
-        
+        $this->app->get('/GetCategories', self::$appName . '::getCategories')->setName('Category');
+        $this->app->get('/GetNhacHot[/{playlistId}[/{page}]]', self::$appName . '::parserNhacHot')->setName('NhacHot');
+        $this->app->get('/GetAlbum[/{albumListId}[/{page}]]', self::$appName . '::parserAlbum')->setName('Album');
+        $this->app->get('/GetChart[/{chartId}]', self::$appName . '::parserChart')->setName('MusicChart');
+        $this->app->get('/GetSongs', self::$appName . '::parserSongs')->setName('Songs');
+        $this->app->get('/GetSinger', self::$appName . '::parserSinger')->setName('Singer');
     }
     
     public static function getCategories($request, $response, $args) {
