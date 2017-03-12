@@ -163,6 +163,7 @@ class BkMusic extends DefaultApi {
             return $response->withJson(ApiConstant::$JSON_ERROR_STATIC + ['message' => $v->errors()], 200);
         }
         $arrListTrack = self::extractTracklist($params['urlSong']);
+        ddd($arrListTrack);
         $appResponse = $response->withJson($arrListTrack);
         return $appResponse;
     }
@@ -226,7 +227,7 @@ class BkMusic extends DefaultApi {
     private static function extractTracklist($url) {
         // Get javascript content
         $html = ParserData::getHmltBySimpleDomParse($url);
-        $srciptString = $html->find('div[class=playing_absolute] script[!src]');
+        $srciptString = $html->find('div[class=playing_absolute]');
         $scriptContent = array_shift($srciptString)->innertext;
         $arrScriptContent = explode('player.peConfig.xmlURL = "', $scriptContent);
         $arrSplited = explode('";', $arrScriptContent[1]);
