@@ -4,6 +4,7 @@ use s10Core\DefaultApi;
 use s10Core\ParserData;
 use Valitron\Validator as V;
 
+error_reporting(-1);
 /**
  * BkMusic Application
  */
@@ -29,6 +30,7 @@ class BkMusic extends DefaultApi {
         self::$arrDatabaseConfigIdiOrm = $this->sqlLocal;
         self::$arrSlimContainer = [];
         // Write magic method __construct() of parent(defaultApp) after re-define public properties
+//        $this->container = new \Slim\Container(['settings' => ['displayErrorDetails' => true]]);
         parent::__construct();
     }
     
