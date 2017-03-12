@@ -229,7 +229,7 @@ class BkMusic extends DefaultApi {
     private static function extractTracklist($url) {
         // Get javascript content
         $html = ParserData::getHmltBySimpleDomParse($url);
-        $srciptString = $html->find('div[class=playing_absolute]');
+        $srciptString = $html->find('div[class=playing_absolute]');//new
         $scriptContent = array_shift($srciptString)->innertext;
         $arrScriptContent = explode('player.peConfig.xmlURL = "', $scriptContent);
         $arrSplited = explode('";', $arrScriptContent[1]);
