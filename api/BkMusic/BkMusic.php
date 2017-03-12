@@ -165,7 +165,7 @@ class BkMusic extends DefaultApi {
             return $response->withJson(ApiConstant::$JSON_ERROR_STATIC + ['message' => $v->errors()], 200);
         }
         $arrListTrack = self::extractTracklist($params['urlSong']);
-        ddd($arrListTrack);
+
         $appResponse = $response->withJson($arrListTrack);
         return $appResponse;
     }
