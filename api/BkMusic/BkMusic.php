@@ -94,7 +94,7 @@ class BkMusic extends DefaultApi {
         ORM::configure(self::$arrDatabaseConfigIdiOrm);
         $categories = ORM::for_table('Categories')
                 ->where(['is_delete' => 0, 'parent_id' => 2])
-                ->find_one($albumId);
+                ->find_one($albumId);        
         if (!$categories) {
             return $response->withJson(ApiConstant::$JSON_ERROR_NOT_FOUND, 404);
         }
@@ -103,8 +103,7 @@ class BkMusic extends DefaultApi {
         
         $arrAlbums = [];
         $html = ParserData::getHmltBySimpleDomParse($url);
-        $liElements = $html->find('div[class=list_album]', 1)
-                ->find('div[class=fram_select] ul li');
+        $liElements = $html->find('div[class=list_album] div[class=fram_select] ul li');
         foreach ($liElements as $liElement) {
             array_push($arrAlbums, [
                 'albumArt' => trim(array_shift($liElement->find('div[class=box-left-album] span[class=avatar] img'))->getAttribute('data-src')),
