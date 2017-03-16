@@ -59,7 +59,7 @@ class BkMusic extends DefaultApi {
                 "categoryCode" => $cateItem->id,
                 "name" => $cateItem->name,
                 "img" => $cateItem->img,
-                "parentId" => $cateItemparentIdid
+                "parentId" => $cateItem->parentId
             ]);
         }
         return $response->withJson($categories, 200, JSON_OPTIONS);
