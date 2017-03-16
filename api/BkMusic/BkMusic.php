@@ -50,8 +50,8 @@ class BkMusic extends DefaultApi {
     public static function getCategories($request, $response, $args) {
         ORM::configure(self::$arrDatabaseConfigIdiOrm);
         $categories = ORM::for_table('Categories')
-                ->select(['id', 'name', 'img', 'parent_id as parentId'])
-                ->where_not_equal(['parent_id' => 0])
+                ->select(['id', 'name', 'img', 'parentId'])
+                ->where_not_equal(['parentId' => 0])
                 ->find_array();
         return $response->withJson($categories, 200, JSON_OPTIONS);
     }
@@ -61,7 +61,7 @@ class BkMusic extends DefaultApi {
         $page = (isset($args['page']) && $args['page'] != 1) ? intval($args['page']) : '';
         ORM::configure(self::$arrDatabaseConfigIdiOrm);
         $categories = ORM::for_table('Categories')
-                ->where(['is_delete' => 0, 'parent_id' => 1])
+                ->where(['isDelete' => 0, 'parentId' => 1])
                 ->find_one($playlistId);
         if (!$categories) {
             return $response->withJson(ApiConstant::$JSON_ERROR_NOT_FOUND, 404);
@@ -93,7 +93,7 @@ class BkMusic extends DefaultApi {
         $page = (isset($args['page']) && $args['page'] != 1) ? intval($args['page']) : '';
         ORM::configure(self::$arrDatabaseConfigIdiOrm);
         $categories = ORM::for_table('Categories')
-                ->where(['is_delete' => 0, 'parent_id' => 2])
+                ->where(['isDelete' => 0, 'parentId' => 2])
                 ->find_one($albumId);        
         if (!$categories) {
             return $response->withJson(ApiConstant::$JSON_ERROR_NOT_FOUND, 404);
@@ -123,7 +123,7 @@ class BkMusic extends DefaultApi {
         
         ORM::configure(self::$arrDatabaseConfigIdiOrm);
         $categories = ORM::for_table('Categories')
-                ->where(['is_delete' => 0, 'parent_id' => 3])
+                ->where(['isDelete' => 0, 'parentId' => 3])
                 ->find_one($albumId);
         if (!$categories) {
             return $response->withJson(ApiConstant::$JSON_ERROR_NOT_FOUND, 404);
