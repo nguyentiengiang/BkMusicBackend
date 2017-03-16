@@ -50,7 +50,7 @@ class BkMusic extends DefaultApi {
     public static function getCategories($request, $response, $args) {
         ORM::configure(self::$arrDatabaseConfigIdiOrm);
         $categories = ORM::for_table('Categories')
-                ->select(['id', 'name', 'img', 'parentId'])
+                ->select(['id' => 'categoryCode', 'name', 'img', 'parentId'])
                 ->where_not_equal(['parentId' => 0])
                 ->find_array();
         return $response->withJson($categories, 200, JSON_OPTIONS);
