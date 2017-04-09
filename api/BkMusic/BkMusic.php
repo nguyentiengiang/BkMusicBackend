@@ -51,7 +51,7 @@ class BkMusic extends DefaultApi {
         ORM::configure(self::$arrDatabaseConfigIdiOrm);
         $getCategories = ORM::for_table('Categories')
                 ->select(['id', 'name', 'img', 'parentId'])
-                ->where_not_equal(['parentId' => 0])
+                ->where_not_equal(['parentId' => 0, 'isDelete' => 1])
                 ->find_many();
         $categories = [];
         foreach ($getCategories as $cateItem) {
