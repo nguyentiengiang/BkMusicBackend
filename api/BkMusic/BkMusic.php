@@ -4,6 +4,7 @@ use s10Core\DefaultApi;
 use s10Core\ParserData;
 use Valitron\Validator as V;
 
+error_reporting(-1);
 /**
  * BkMusic Application
  */
@@ -29,6 +30,7 @@ class BkMusic extends DefaultApi {
         self::$arrDatabaseConfigIdiOrm = $this->sqlLocal;
         self::$arrSlimContainer = [];
         // Write magic method __construct() of parent(defaultApp) after re-define public properties
+//        $this->container = new \Slim\Container(['settings' => ['displayErrorDetails' => true]]);
         parent::__construct();
     }
     
@@ -47,10 +49,19 @@ class BkMusic extends DefaultApi {
     
     public static function getCategories($request, $response, $args) {
         ORM::configure(self::$arrDatabaseConfigIdiOrm);
-        $categories = ORM::for_table('Categories')
-                ->select(['id', 'name', 'img', 'parent_id'])
-                ->where_not_equal(['parent_id' => 0])
-                ->find_array();
+        $getCategories = ORM::for_table('Categories')
+                ->select(['id', 'name', 'img', 'parentId'])
+                ->where_not_equal(['parentId' => 0, 'isDelete' => 1])
+                ->find_many();
+        $categories = [];
+        foreach ($getCategories as $cateItem) {
+            array_push($categories, [
+                "categoryCode" => $cateItem->id,
+                "name" => $cateItem->name,
+                "img" => $cateItem->img,
+                "parentId" => $cateItem->parentId
+            ]);
+        }
         return $response->withJson($categories, 200, JSON_OPTIONS);
     }
     
@@ -59,7 +70,7 @@ class BkMusic extends DefaultApi {
         $page = (isset($args['page']) && $args['page'] != 1) ? intval($args['page']) : '';
         ORM::configure(self::$arrDatabaseConfigIdiOrm);
         $categories = ORM::for_table('Categories')
-                ->where(['is_delete' => 0, 'parent_id' => 1])
+                ->where(['isDelete' => 0, 'parentId' => 1])
                 ->find_one($playlistId);
         if (!$categories) {
             return $response->withJson(ApiConstant::$JSON_ERROR_NOT_FOUND, 404);
@@ -91,8 +102,8 @@ class BkMusic extends DefaultApi {
         $page = (isset($args['page']) && $args['page'] != 1) ? intval($args['page']) : '';
         ORM::configure(self::$arrDatabaseConfigIdiOrm);
         $categories = ORM::for_table('Categories')
-                ->where(['is_delete' => 0, 'parent_id' => 2])
-                ->find_one($albumId);
+                ->where(['isDelete' => 0, 'parentId' => 2])
+                ->find_one($albumId);        
         if (!$categories) {
             return $response->withJson(ApiConstant::$JSON_ERROR_NOT_FOUND, 404);
         }
@@ -101,8 +112,7 @@ class BkMusic extends DefaultApi {
         
         $arrAlbums = [];
         $html = ParserData::getHmltBySimpleDomParse($url);
-        $liElements = $html->find('div[class=list_album]', 1)
-                ->find('div[class=fram_select] ul li');
+        $liElements = $html->find('div[class=list_album] div[class=fram_select] ul li');
         foreach ($liElements as $liElement) {
             array_push($arrAlbums, [
                 'albumArt' => trim(array_shift($liElement->find('div[class=box-left-album] span[class=avatar] img'))->getAttribute('data-src')),
@@ -122,7 +132,7 @@ class BkMusic extends DefaultApi {
         
         ORM::configure(self::$arrDatabaseConfigIdiOrm);
         $categories = ORM::for_table('Categories')
-                ->where(['is_delete' => 0, 'parent_id' => 3])
+                ->where(['isDelete' => 0, 'parentId' => 3])
                 ->find_one($albumId);
         if (!$categories) {
             return $response->withJson(ApiConstant::$JSON_ERROR_NOT_FOUND, 404);
@@ -163,6 +173,7 @@ class BkMusic extends DefaultApi {
             return $response->withJson(ApiConstant::$JSON_ERROR_STATIC + ['message' => $v->errors()], 200);
         }
         $arrListTrack = self::extractTracklist($params['urlSong']);
+
         $appResponse = $response->withJson($arrListTrack);
         return $appResponse;
     }
@@ -226,7 +237,7 @@ class BkMusic extends DefaultApi {
     private static function extractTracklist($url) {
         // Get javascript content
         $html = ParserData::getHmltBySimpleDomParse($url);
-        $srciptString = $html->find('div[class=playing_absolute] script[!src]');
+        $srciptString = $html->find('div[class=playing_absolute]');//new
         $scriptContent = array_shift($srciptString)->innertext;
         $arrScriptContent = explode('player.peConfig.xmlURL = "', $scriptContent);
         $arrSplited = explode('";', $arrScriptContent[1]);
